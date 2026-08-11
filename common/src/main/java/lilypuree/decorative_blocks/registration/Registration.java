@@ -5,8 +5,10 @@ import lilypuree.decorative_blocks.entity.DummyEntityForSitting;
 import lilypuree.decorative_blocks.fluid.ThatchFluid;
 import lilypuree.decorative_blocks.platform.Services;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
@@ -17,11 +19,12 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Registration {
-    private static final ResourceLocation thatchStillTexture = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block/thatch_still");
-    private static final ResourceLocation thatchFlowingTexture = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block/thatch_flowing");
+    private static final Identifier thatchStillTexture = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "block/thatch_still");
+    private static final Identifier thatchFlowingTexture = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "block/thatch_flowing");
 
     public static final ThatchFluid.FluidReferenceHolder referenceHolder;
     public static final Supplier<ThatchFluid.Flowing> FLOWING_THATCH;
@@ -33,14 +36,14 @@ public class Registration {
     static {
         ITEM_GROUP = Services.PLATFORM.register(BuiltInRegistries.CREATIVE_MODE_TAB, "general", Registration::getTab);
 
-        BlockBehaviour.Properties thatchProperties = Block.Properties.of().liquid().replaceable().noCollission().randomTicks().noLootTable()
+        BlockBehaviour.Properties thatchProperties = Block.Properties.of().liquid().replaceable().noCollision().randomTicks().noLootTable()
                 .mapColor(MapColor.COLOR_YELLOW).pushReaction(PushReaction.DESTROY).strength(100.0F);
 
         //using lambdas, not method references which will access the field values of FLOWING_THATCH and STILL_THATCH which are still null.
         referenceHolder = new ThatchFluid.FluidReferenceHolder(() -> Blocks.HAY_BLOCK, () -> Registration.THATCH_BLOCK.get(), () -> Registration.FLOWING_THATCH.get(), () -> Registration.STILL_THATCH.get(), thatchStillTexture, thatchFlowingTexture, 0xAC8D08);
         FLOWING_THATCH = Services.PLATFORM.register(BuiltInRegistries.FLUID, "flowing_thatch", () -> Services.PLATFORM.createThatchFlowingFluid(referenceHolder));
         STILL_THATCH = Services.PLATFORM.register(BuiltInRegistries.FLUID, "thatch", () -> Services.PLATFORM.createThatchStillFluid(referenceHolder));
-        THATCH_BLOCK = Services.PLATFORM.register(BuiltInRegistries.BLOCK, "thatch", () -> Services.PLATFORM.createThatchFluidBlock(Registration.STILL_THATCH, thatchProperties));
+        THATCH_BLOCK = register("thatch", thatchProperties, (properties) -> Services.PLATFORM.createThatchFluidBlock(Registration.STILL_THATCH, properties));
     }
 
     public static Supplier<EntityType<DummyEntityForSitting>> DUMMY_ENTITY_TYPE = Services.PLATFORM.register(BuiltInRegistries.ENTITY_TYPE, "dummy_entity",
@@ -48,7 +51,7 @@ public class Registration {
                     .clientTrackingRange(256)
                     .updateInterval(20)
                     .sized(0.0001F, 0.0001F)
-                    .build(Constants.MOD_ID + ":dummy"));
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "dummy"))));
 
     public static void init() {
     }
@@ -72,5 +75,11 @@ public class Registration {
             DBItems.PALISADE_ITEMBLOCKS.values().forEach(regObject -> output.accept(regObject::get));
         });
         return builder.build();
+    }
+
+    private static Supplier<LiquidBlock> register(String name, BlockBehaviour.Properties properties, Function<BlockBehaviour.Properties, LiquidBlock> constructor) {
+        final var id = ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
+        properties.setId(id);
+        return Services.PLATFORM.register(BuiltInRegistries.BLOCK, name, () -> constructor.apply(properties));
     }
 }

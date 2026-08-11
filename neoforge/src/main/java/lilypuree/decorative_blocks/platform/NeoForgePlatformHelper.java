@@ -6,21 +6,17 @@ import lilypuree.decorative_blocks.fluid.ForgeThatchFluid;
 import lilypuree.decorative_blocks.fluid.ForgeThatchFluidBlock;
 import lilypuree.decorative_blocks.fluid.ThatchFluid;
 import lilypuree.decorative_blocks.platform.services.IPlatformHelper;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRuleCategory;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -47,8 +43,8 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 
 
     @Override
-    public GameRules.Key<GameRules.BooleanValue> registerGameRule(String name, GameRules.Category category, boolean defaultValue) {
-        return GameRules.register(name, category, GameRules.BooleanValue.create(defaultValue));
+    public GameRule<Boolean> registerGameRule(String name, GameRuleCategory category, boolean defaultValue) {
+        return GameRules.registerBoolean(name, category, defaultValue);
     }
 
     @Override
@@ -74,16 +70,6 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public CreativeModeTab.Builder createModTab() {
         return CreativeModeTab.builder();
-    }
-
-    @Override
-    public void setRenderLayer(Block block, RenderType renderType) {
-        ItemBlockRenderTypes.setRenderLayer(block, renderType);
-    }
-
-    @Override
-    public void registerItemFunc(Item item, ResourceLocation name, ItemPropertyFunction func) {
-        ItemProperties.register(item, name, func);
     }
 
     @Override

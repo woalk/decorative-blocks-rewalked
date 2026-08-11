@@ -4,9 +4,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CrossCollisionBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
@@ -16,6 +18,7 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import org.jspecify.annotations.NonNull;
 
 public class PalisadeBlock extends CrossCollisionBlock implements IWoodenBlock {
     public static final MapCodec<PalisadeBlock> CODEC = RecordCodecBuilder.mapCodec(
@@ -73,19 +76,17 @@ public class PalisadeBlock extends CrossCollisionBlock implements IWoodenBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected @NonNull BlockState updateShape(BlockState stateIn, @NonNull LevelReader worldIn, @NonNull ScheduledTickAccess ticks, @NonNull BlockPos currentPos, @NonNull Direction directionToNeighbour, @NonNull BlockPos neighbourPos, @NonNull BlockState neighbourState, @NonNull RandomSource random) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            ticks.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
-        return facing.getAxis().getPlane() == Direction.Plane.HORIZONTAL ?
-                stateIn.setValue(PROPERTY_BY_DIRECTION.get(facing), this.canConnect(facingState, facingState.isFaceSturdy(worldIn, facingPos, facing.getOpposite()), facing.getOpposite()))
-                : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return directionToNeighbour.getAxis().getPlane() == Direction.Plane.HORIZONTAL ?
+                stateIn.setValue(PROPERTY_BY_DIRECTION.get(directionToNeighbour), this.canConnect(neighbourState, neighbourState.isFaceSturdy(worldIn, neighbourPos, directionToNeighbour.getOpposite()), directionToNeighbour.getOpposite()))
+                : super.updateShape(stateIn, worldIn, ticks, currentPos, directionToNeighbour, neighbourPos, neighbourState, random);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED);
     }
-
-  
 }

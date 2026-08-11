@@ -3,20 +3,21 @@ package lilypuree.decorative_blocks.entity;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import org.jspecify.annotations.NonNull;
 
-public class EmptyRenderer extends EntityRenderer<DummyEntityForSitting> {
+public class EmptyRenderer extends EntityRenderer<DummyEntityForSitting, EntityRenderState> {
     public EmptyRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 
     @Override
-    public boolean shouldRender(DummyEntityForSitting livingEntityIn, Frustum camera, double camX, double camY, double camZ) {
+    public boolean shouldRender(@NonNull DummyEntityForSitting livingEntityIn, @NonNull Frustum camera, double camX, double camY, double camZ) {
         return false;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DummyEntityForSitting entity) {
-        return null;
+    public @NonNull EntityRenderState createRenderState() {
+        return new EntityRenderState();
     }
 }

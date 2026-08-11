@@ -1,11 +1,11 @@
 plugins {
-    id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.9"
+    id "org.jetbrains.gradle.plugin.idea-ext" version "1.4.1"
 }
 
 subprojects {
     apply plugin: 'java'
 
-    java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+    java.toolchain.languageVersion = JavaLanguageVersion.of(25)
     java.withSourcesJar()
     java.withJavadocJar()
 
@@ -42,43 +42,16 @@ subprojects {
             url = 'https://repo.spongepowered.org/repository/maven-public/'
         }
         maven {
-            name = 'BlameJared Maven (JEI / CrT / Bookshelf)'
-            url = 'https://maven.blamejared.com'
-        }
-        maven {
-            name = 'ParchmentMC'
-            url = 'https://maven.parchmentmc.org/'
-        }
-        maven {
-            name = 'BlameJared'
-            url = 'https://maven.blamejared.com'
-        }
-        maven {
             url "https://cursemaven.com"
             content {
                 includeGroup "curse.maven"
             }
         }
-        // Crystal Nest repository where Soul Fire'd is hosted.
-        maven {
-            name = "Crystal Nest"
-            url = "https://maven.crystalnest.it"
-        }
-        // Fuzs repository where Soul Fire'd required dependency FCAP is hosted. Not needed since 1.21
-        maven {
-            name = "Fuzs Mod Resources"
-            url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
-        }
-//        maven {
-//            // location of a maven mirror for JEI files, as a fallback
-//            name = "ModMaven"
-//            url = "https://modmaven.dev"
-//        }
     }
 
     tasks.withType(JavaCompile).configureEach {
         it.options.encoding = 'UTF-8'
-        it.options.getRelease().set(21)
+        it.options.getRelease().set(25)
     }
 
     processResources {
@@ -96,7 +69,6 @@ subprojects {
                 "mod_id"                            : mod_id,
                 "mod_license"                       : mod_license,
                 "mod_description"                   : project.mod_description,
-                "soul_fire_d_version"               : soul_fire_d_version
         ]
 
         filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {

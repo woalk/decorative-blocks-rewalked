@@ -9,19 +9,17 @@ import lilypuree.decorative_blocks.registration.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -37,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -112,14 +111,14 @@ public class SeatBlock extends HorizontalDirectionalBlock implements SimpleWater
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+        if (state.getValue(WATERLOGGED)) {
+            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        if (facing == Direction.DOWN) {
-            return stateIn.setValue(ATTACHED, isInAttachablePos(worldIn, currentPos));
+        if (directionToNeighbour == Direction.DOWN) {
+            return state.setValue(ATTACHED, isInAttachablePos(level, pos));
         } else {
-            return stateIn;
+            return state;
         }
     }
 
@@ -136,7 +135,7 @@ public class SeatBlock extends HorizontalDirectionalBlock implements SimpleWater
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state) {
         return !state.getValue(WATERLOGGED);
     }
 
@@ -146,12 +145,12 @@ public class SeatBlock extends HorizontalDirectionalBlock implements SimpleWater
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         Item item = stack.getItem();
 
-        if (!level.isClientSide && item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof LanternBlock) {
+        if (!level.isClientSide() && item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof LanternBlock) {
             if (hit.getDirection() != Direction.DOWN || !level.getBlockState(pos.below()).isAir()) {
-                return ItemInteractionResult.FAIL;
+                return InteractionResult.FAIL;
             }
 
             BlockState newState = state.setValue(ATTACHED, Boolean.TRUE);
@@ -159,26 +158,28 @@ public class SeatBlock extends HorizontalDirectionalBlock implements SimpleWater
             level.sendBlockUpdated(pos, state, newState, 3);
             level.setBlock(pos.below(), (((BlockItem) item).getBlock()).defaultBlockState().setValue(BlockStateProperties.HANGING, Boolean.TRUE), Block.UPDATE_ALL | Block.UPDATE_KNOWN_SHAPE);
             stack.consume(1, player);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide && hit.getDirection() == Direction.UP && !state.getValue(OCCUPIED)
+        if (!level.isClientSide() && hit.getDirection() == Direction.UP && !state.getValue(OCCUPIED)
                 && !state.getValue(POST) && level.getBlockState(pos.above()).isAir() && isPlayerInRange(player, pos)) {
-            DummyEntityForSitting seat = Registration.DUMMY_ENTITY_TYPE.get().create(level);
-            seat.setSeatPos(pos);
-            level.addFreshEntity(seat);
-            player.startRiding(seat);
-            return InteractionResult.SUCCESS;
+            DummyEntityForSitting seat = Registration.DUMMY_ENTITY_TYPE.get().create(level, EntitySpawnReason.TRIGGERED);
+            if (seat != null) {
+                seat.setSeatPos(pos);
+                level.addFreshEntity(seat);
+                player.startRiding(seat);
+                return InteractionResult.SUCCESS;
+            }
         }
         return super.useWithoutItem(state, level, pos, player, hit);
     }
 
     private static boolean isPlayerInRange(Player player, BlockPos pos) {
-        Vec3 position = pos.getCenter();
+        Vec3 position = Vec3.atCenterOf(pos);
         int blockReachDistance = 2;
 
         AABB range = AABB.ofSize(position, blockReachDistance, blockReachDistance, blockReachDistance);
@@ -186,7 +187,7 @@ public class SeatBlock extends HorizontalDirectionalBlock implements SimpleWater
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    protected void onPlace(@NonNull BlockState oldState, Level worldIn, BlockPos pos, @NonNull BlockState state, boolean movedByPiston) {
         double x = pos.getX();
         double y = pos.getY();
         double z = pos.getZ();
@@ -194,7 +195,7 @@ public class SeatBlock extends HorizontalDirectionalBlock implements SimpleWater
         for (DummyEntityForSitting entity : entities) {
             entity.remove(Entity.RemovalReason.DISCARDED);
         }
-        super.onRemove(state, worldIn, pos, newState, isMoving);
+        super.onPlace(oldState, worldIn, pos, state, movedByPiston);
     }
 
     @Override

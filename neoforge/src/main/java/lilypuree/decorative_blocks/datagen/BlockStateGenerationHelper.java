@@ -7,7 +7,7 @@ import lilypuree.decorative_blocks.blocks.state.ModBlockProperties;
 import lilypuree.decorative_blocks.blocks.state.SupportFaceShape;
 import lilypuree.decorative_blocks.blocks.types.WoodDecorativeBlockTypes;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -168,22 +168,22 @@ public class BlockStateGenerationHelper {
     private ModelBuilder<?> createModel(WoodType wood, WoodDecorativeBlockTypes type, String prefix, String suffix) {
         String name = prefix + type + suffix;
         return models().getBuilder(wood.name() + "_" + name)
-                .parent(modelFile(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "custom/" + name)));
+                .parent(modelFile(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "custom/" + name)));
     }
 
     public ModelBuilder<?> createChildModel(String path, String parent) {
         return models().getBuilder(path)
-                .parent(modelFile(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "custom/" + parent)));
+                .parent(modelFile(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "custom/" + parent)));
     }
 
     public ModelBuilder<?> withParticleTexture(ModelBuilder<?> model, String name) {
-        ResourceLocation texture = modBlockLoc(name);
+        Identifier texture = modBlockLoc(name);
         return model.texture("particle", texture).texture("texture", texture);
     }
 
     public ModelBuilder<?> withSideEndTextures(ModelBuilder<?> model, String name) {
-        ResourceLocation side = modBlockLoc(name + "_side");
-        ResourceLocation end = modBlockLoc(name + "_end");
+        Identifier side = modBlockLoc(name + "_side");
+        Identifier end = modBlockLoc(name + "_end");
         return model.texture("particle", side).texture("side", side).texture("end", end);
     }
 
@@ -199,15 +199,15 @@ public class BlockStateGenerationHelper {
         return provider.getVariantBuilder(b);
     }
 
-    public ModelFile modelFile(ResourceLocation loc) {
+    public ModelFile modelFile(Identifier loc) {
         return new ModelFile.UncheckedModelFile(loc);
     }
 
-    public ResourceLocation modBlockLoc(String name) {
+    public Identifier modBlockLoc(String name) {
         return modLoc("block/" + name);
     }
 
-    public ResourceLocation modLoc(String name) {
-        return ResourceLocation.fromNamespaceAndPath(modid, name);
+    public Identifier modLoc(String name) {
+        return Identifier.fromNamespaceAndPath(modid, name);
     }
 }

@@ -10,7 +10,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -85,7 +85,7 @@ public class DBRecipes extends RecipeProvider {
         addRecipe(recipeOutput, RecipeBuilder.getDefaultRecipeId(builder.getResult()), builder, criterion, triggers);
     }
 
-    public static void addRecipe(RecipeOutput recipeOutput, ResourceLocation name, RecipeBuilder builder, String criterion, ItemLike... triggers) {
+    public static void addRecipe(RecipeOutput recipeOutput, Identifier name, RecipeBuilder builder, String criterion, ItemLike... triggers) {
         builder.unlockedBy(criterion, InventoryChangeTrigger.TriggerInstance.hasItems(triggers)).save(recipeOutput, name);
     }
 
@@ -145,7 +145,7 @@ public class DBRecipes extends RecipeProvider {
                 "has_torch", torch);
         String chandelierId = BuiltInRegistries.ITEM.getKey(chandelier.asItem()).getPath();
         String torchId = BuiltInRegistries.ITEM.getKey(torch).getPath();
-        addRecipe(recipeOutput, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, torchId + "_from_" + chandelierId), shapelessRecipe(RecipeCategory.DECORATIONS, torch, 4)
+        addRecipe(recipeOutput, Identifier.fromNamespaceAndPath(Constants.MOD_ID, torchId + "_from_" + chandelierId), shapelessRecipe(RecipeCategory.DECORATIONS, torch, 4)
                         .group("torches_from_chandeliers")
                         .requires(chandelier),
                 "has_torch", torch);

@@ -7,15 +7,15 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 @JeiPlugin
 public class DecorativeBlocksJEIPlugin implements IModPlugin {
 
     @Override
-    public ResourceLocation getPluginUid() {
-        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "main");
+    public Identifier getPluginUid() {
+        return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "main");
     }
 
     @Override

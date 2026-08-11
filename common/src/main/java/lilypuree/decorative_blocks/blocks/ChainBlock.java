@@ -64,7 +64,7 @@ public class ChainBlock extends RotatedPillarBlock implements SimpleWaterloggedB
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state) {
         return !state.getValue(WATERLOGGED);
     }
 

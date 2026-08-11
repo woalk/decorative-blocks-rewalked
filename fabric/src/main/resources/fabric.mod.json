@@ -26,21 +26,11 @@
     "${mod_id}.mixins.json",
     "${mod_id}.fabric.mixins.json"
   ],
+  "accessWidener": "${mod_id}.accesswidener",
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": "*",
     "minecraft": "${minecraft_fabric_version_range}",
-    "java": ">=21"
-  },
-  "suggests": {
-    "soulfired": "^3.2.1.0"
-  },
-  "custom": {
-    "mc-publish": {
-      "loaders": ["fabric"],
-      "dependencies": [
-        "soul-fire-d@{soul_fire_d_version}(optional){modrinth:d6MhxwRo}{curseforge:662413}"
-      ]
-    }
+    "java": ">=25"
   }
 }

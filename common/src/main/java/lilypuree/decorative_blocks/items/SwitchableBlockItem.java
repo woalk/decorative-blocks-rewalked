@@ -2,7 +2,7 @@ package lilypuree.decorative_blocks.items;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import org.jspecify.annotations.NonNull;
 
 public class SwitchableBlockItem extends BlockItem {
     private final BooleanProperty switching;
@@ -24,12 +25,12 @@ public class SwitchableBlockItem extends BlockItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public @NonNull InteractionResult use(@NonNull Level worldIn, Player playerIn, @NonNull InteractionHand handIn) {
         if (playerIn.isShiftKeyDown()) {
             if (!worldIn.isClientSide()) {
                 cycleValueTag(playerIn.getItemInHand(handIn));
             }
-            return InteractionResultHolder.success(playerIn.getItemInHand(handIn));
+            return InteractionResult.SUCCESS;
         }
         return super.use(worldIn, playerIn, handIn);
     }

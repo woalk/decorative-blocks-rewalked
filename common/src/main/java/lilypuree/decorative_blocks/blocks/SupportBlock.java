@@ -137,7 +137,7 @@ public class SupportBlock extends HorizontalDirectionalBlock implements SimpleWa
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state) {
         return !state.getValue(WATERLOGGED);
     }
 
@@ -193,10 +193,12 @@ public class SupportBlock extends HorizontalDirectionalBlock implements SimpleWa
         Direction.Plane.HORIZONTAL.stream().forEach(dir -> {
             int x = dir.getStepX();
             int z = dir.getStepZ();
-            verticalLarge.put(dir, Block.box((1 - x * x) * 0 + x * x * (d1 / 2 - d1 / 2 * x), 0, (1 - z * z) * 0 + z * z * (d1 / 2 - d1 / 2 * z),
-                    (1 - x * x) * 16 + x * x * ((d0 + 16) / 2 + (d0 - 16) / 2 * x), 16, (1 - z * z) * 16 + z * z * ((d0 + 16) / 2 + (d0 - 16) / 2 * z)));
+            double v = x * x * ((d0 + 16) / 2 + (d0 - 16) / 2 * x);
+            double v1 = z * z * ((d0 + 16) / 2 + (d0 - 16) / 2 * z);
+            verticalLarge.put(dir, Block.box(0 + x * x * (d1 / 2 - d1 / 2 * x), 0, 0 + z * z * (d1 / 2 - d1 / 2 * z),
+                    (1 - x * x) * 16 + v, 16, (1 - z * z) * 16 + v1));
             verticalSmall.put(dir, Block.box((1 - x * x) * d2 + x * x * (d1 / 2 - d1 / 2 * x), 0, (1 - z * z) * d2 + z * z * (d1 / 2 - d1 / 2 * z),
-                    (1 - x * x) * d3 + x * x * ((d0 + 16) / 2 + (d0 - 16) / 2 * x), 16, (1 - z * z) * d3 + z * z * ((d0 + 16) / 2 + (d0 - 16) / 2 * z)));
+                    (1 - x * x) * d3 + v, 16, (1 - z * z) * d3 + v1));
         });
     }
 

@@ -7,17 +7,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.NonNull;
 
 public class BonfireBlock extends Block {
     public BonfireBlock(Properties properties) {
@@ -42,12 +41,12 @@ public class BonfireBlock extends Block {
     }
 
     @Override
-    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+    protected void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
         if (!entityIn.fireImmune() && entityIn instanceof LivingEntity) {
             entityIn.hurt(entityIn.damageSources().inFire(), 1.0F);
             entityIn.igniteForSeconds(3);
         }
-        super.entityInside(state, worldIn, pos, entityIn);
+        super.entityInside(state, worldIn, pos, entityIn, effectApplier, isPrecise);
     }
 
 
@@ -78,12 +77,12 @@ public class BonfireBlock extends Block {
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+    protected void onPlace(BlockState newState, Level level, BlockPos pos, BlockState state, boolean movedByPiston) {
         if (!state.is(newState.getBlock()) && newState.getFluidState().isSource()) {
             level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.2f, 0.6f);
             spawnExtinguishSmoke(level, pos);
         }
-        super.onRemove(state, level, pos, newState, movedByPiston);
+        super.onPlace(newState, level, pos, state, movedByPiston);
     }
 
     public static void spawnExtinguishSmoke(LevelAccessor world, BlockPos pos) {
@@ -98,8 +97,8 @@ public class BonfireBlock extends Block {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        return this.canSurvive(stateIn, worldIn, currentPos) ? stateIn : Blocks.AIR.defaultBlockState();
+    protected @NonNull BlockState updateShape(@NonNull BlockState state, @NonNull LevelReader level, @NonNull ScheduledTickAccess ticks, @NonNull BlockPos pos, @NonNull Direction directionToNeighbour, @NonNull BlockPos neighbourPos, @NonNull BlockState neighbourState, @NonNull RandomSource random) {
+        return this.canSurvive(state, level, pos) ? state : Blocks.AIR.defaultBlockState();
     }
 
 

@@ -1,15 +1,20 @@
 package lilypuree.decorative_blocks.registration;
 
 import com.google.common.collect.ImmutableMap;
+import lilypuree.decorative_blocks.Constants;
 import lilypuree.decorative_blocks.blocks.types.VanillaWoodTypes;
 import lilypuree.decorative_blocks.items.SeatItem;
 import lilypuree.decorative_blocks.items.SupportItem;
 import lilypuree.decorative_blocks.platform.Services;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.properties.WoodType;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static lilypuree.decorative_blocks.blocks.types.WoodDecorativeBlockTypes.*;
@@ -49,8 +54,8 @@ public class DBItems {
         for (WoodType woodType : VanillaWoodTypes.VANILLA) {
             if (woodType != WoodType.BAMBOO)
                 beams.put(woodType, registerBlockItem(DBNames.name(woodType, BEAM), DBBlocks.BEAMS.get(woodType)));
-            seats.put(woodType, registerItem(DBNames.name(woodType, SEAT), () -> new SeatItem(DBBlocks.SEATS.get(woodType).get(), new Item.Properties())));
-            supports.put(woodType, registerItem(DBNames.name(woodType, SUPPORT), () -> new SupportItem(DBBlocks.SUPPORTS.get(woodType).get(), new Item.Properties())));
+            seats.put(woodType, registerItem(DBNames.name(woodType, SEAT), new Item.Properties(), (properties) -> new SeatItem(DBBlocks.SEATS.get(woodType).get(), properties)));
+            supports.put(woodType, registerItem(DBNames.name(woodType, SUPPORT), new Item.Properties(), (properties) -> new SupportItem(DBBlocks.SUPPORTS.get(woodType).get(), properties)));
             palisades.put(woodType, registerBlockItem(DBNames.name(woodType, PALISADE), DBBlocks.PALISADES.get(woodType)));
         }
         BEAM_ITEMBLOCKS = beams.build();
@@ -63,12 +68,14 @@ public class DBItems {
     }
 
 
-    private static <T extends Item> ItemWrapper<T> registerItem(String name, Supplier<T> itemSupplier) {
-        return new ItemWrapper<>(Services.PLATFORM.register(BuiltInRegistries.ITEM, name, itemSupplier));
+    private static <T extends Item> ItemWrapper<T> registerItem(String name, Item.Properties properties, Function<Item.Properties, T> itemSupplier) {
+        final var id = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
+        properties.setId(id);
+        return new ItemWrapper<>(Services.PLATFORM.register(BuiltInRegistries.ITEM, name, () -> itemSupplier.apply(properties)));
     }
 
     private static ItemWrapper<BlockItem> registerBlockItem(String name, BlockWrapper<?> block) {
-        return registerItem(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        return registerItem(name, new Item.Properties(), (properties) -> new BlockItem(block.get(), properties));
     }
 
 }

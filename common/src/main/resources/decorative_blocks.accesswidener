@@ -1,0 +1,3 @@
+accessWidener v1 official
+accessible method net/minecraft/world/item/CreativeModeTab$DisplayItemsGenerator accept (Lnet/minecraft/world/item/CreativeModeTab$ItemDisplayParameters;Lnet/minecraft/world/item/CreativeModeTab$Output;)V
+accessible method net/minecraft/world/item/CreativeModeTab$Output accept (Lnet/minecraft/world/level/ItemLike;)V

@@ -2,7 +2,8 @@ package lilypuree.decorative_blocks.fluid;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Supplier;
 
@@ -88,11 +90,6 @@ public abstract class ThatchFluid extends FlowingFluid {
     }
 
     @Override
-    protected boolean canConvertToSource(Level level) {
-        return false;
-    }
-
-    @Override
     protected void spreadTo(LevelAccessor worldIn, BlockPos pos, BlockState blockStateIn, Direction direction, FluidState fluidStateIn) {
         if (direction == Direction.DOWN) {
             boolean shouldFlowInto = false;
@@ -147,13 +144,13 @@ public abstract class ThatchFluid extends FlowingFluid {
         }
 
         @Override
-        public int getAmount(FluidState fluidState) {
-            return fluidState.getValue(LEVEL);
+        protected boolean canConvertToSource(@NonNull ServerLevel level) {
+            return false;
         }
 
         @Override
-        public boolean isSource(FluidState state) {
-            return false;
+        public int getAmount(FluidState fluidState) {
+            return fluidState.getValue(LEVEL);
         }
     }
 
@@ -164,12 +161,17 @@ public abstract class ThatchFluid extends FlowingFluid {
         }
 
         @Override
-        protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
+        protected void createFluidStateDefinition(StateDefinition.@NonNull Builder<Fluid, FluidState> builder) {
             super.createFluidStateDefinition(builder);
         }
 
         @Override
-        public int getAmount(FluidState p_207192_1_) {
+        protected boolean canConvertToSource(ServerLevel level) {
+            return false;
+        }
+
+        @Override
+        public int getAmount(@NonNull FluidState p_207192_1_) {
             return 8;
         }
 
@@ -182,8 +184,8 @@ public abstract class ThatchFluid extends FlowingFluid {
 
     public record FluidReferenceHolder(Supplier<Block> sourceBlock, Supplier<LiquidBlock> liquidBlock,
                                        Supplier<FlowingFluid> flowing, Supplier<FlowingFluid> source,
-                                       ResourceLocation thatchStillTexture,
-                                       ResourceLocation thatchFlowingTexture, int color) {
+                                       Identifier thatchStillTexture,
+                                       Identifier thatchFlowingTexture, int color) {
 
 
         public Block getSourceBlock() {

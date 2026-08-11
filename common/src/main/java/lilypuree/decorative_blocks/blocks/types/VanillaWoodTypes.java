@@ -1,7 +1,8 @@
 package lilypuree.decorative_blocks.blocks.types;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.WoodType;
@@ -24,10 +25,11 @@ public class VanillaWoodTypes {
             WoodType.CRIMSON,
             WoodType.WARPED,
             WoodType.MANGROVE,
+            WoodType.PALE_OAK,
             WoodType.BAMBOO);
 
-    private static ResourceLocation mcLoc(String name) {
-        return ResourceLocation.withDefaultNamespace(name);
+    private static Identifier mcLoc(String name) {
+        return Identifier.withDefaultNamespace(name);
     }
 
     public static Block getLog(WoodType woodType) {
@@ -35,25 +37,25 @@ public class VanillaWoodTypes {
             return Blocks.STRIPPED_BAMBOO_BLOCK;
         } else {
             String suffix = isNetherWood(woodType) ? "_stem" : "_log";
-            return BuiltInRegistries.BLOCK.get(mcLoc(woodType.name() + suffix));
+            return BuiltInRegistries.BLOCK.get(mcLoc(woodType.name() + suffix)).map(Holder.Reference::value).orElse(Blocks.OAK_LOG);
         }
     }
 
     public static Block getStrippedLog(WoodType woodType) {
         String suffix = isNetherWood(woodType) ? "_stem" : "_log";
-        return BuiltInRegistries.BLOCK.get(mcLoc("stripped_" + woodType.name() + suffix));
+        return BuiltInRegistries.BLOCK.get(mcLoc(woodType.name() + suffix)).map(Holder.Reference::value).orElse(Blocks.STRIPPED_DARK_OAK_LOG);
     }
 
     public static Block getSlab(WoodType woodType) {
-        return BuiltInRegistries.BLOCK.get(mcLoc(woodType.name() + "_slab"));
+        return BuiltInRegistries.BLOCK.get(mcLoc(woodType.name() + "_slab")).map(Holder.Reference::value).orElse(Blocks.OAK_SLAB);
     }
 
     public static Block getFence(WoodType woodType) {
-        return BuiltInRegistries.BLOCK.get(mcLoc(woodType.name() + "_fence"));
+        return BuiltInRegistries.BLOCK.get(mcLoc(woodType.name() + "_fence")).map(Holder.Reference::value).orElse(Blocks.OAK_FENCE);
     }
 
     public static Block getPlanks(WoodType woodType) {
-        return BuiltInRegistries.BLOCK.get(mcLoc(woodType.name() + "_planks"));
+        return BuiltInRegistries.BLOCK.get(mcLoc(woodType.name() + "_planks")).map(Holder.Reference::value).orElse(Blocks.OAK_PLANKS);
     }
 
     public static boolean isNetherWood(WoodType woodType) {

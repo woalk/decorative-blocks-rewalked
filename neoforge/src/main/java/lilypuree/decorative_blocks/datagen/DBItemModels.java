@@ -8,7 +8,7 @@ import lilypuree.decorative_blocks.registration.DBBlocks;
 import lilypuree.decorative_blocks.registration.DBItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.WoodType;
@@ -67,12 +67,12 @@ public class DBItemModels extends ItemModelProvider {
             generated(name, provider.modLoc(ModelProvider.ITEM_FOLDER + "/" + name));
         }
 
-        public void simpleItem(ItemLike item, ResourceLocation texture) {
+        public void simpleItem(ItemLike item, Identifier texture) {
             String name = BuiltInRegistries.ITEM.getKey(item.asItem()).getPath();
             generated(name, texture);
         }
 
-        public void generated(String path, ResourceLocation texture) {
+        public void generated(String path, Identifier texture) {
             provider.getBuilder(path).parent(newModel(provider.mcLoc("item/generated"))).texture("layer0", texture);
         }
 
@@ -94,12 +94,12 @@ public class DBItemModels extends ItemModelProvider {
             return newModel(modBlockLoc(name));
         }
 
-        public ModelFile newModel(ResourceLocation location) {
+        public ModelFile newModel(Identifier location) {
             return new ModelFile.UncheckedModelFile(location);
         }
 
-        public ResourceLocation modBlockLoc(String name) {
-            return ResourceLocation.fromNamespaceAndPath(modid, "block/" + name);
+        public Identifier modBlockLoc(String name) {
+            return Identifier.fromNamespaceAndPath(modid, "block/" + name);
         }
     }
 }
