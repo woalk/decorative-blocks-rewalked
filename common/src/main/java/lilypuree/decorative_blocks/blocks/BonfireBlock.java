@@ -1,8 +1,5 @@
 package lilypuree.decorative_blocks.blocks;
 
-import lilypuree.decorative_blocks.compat.SoulFired;
-import lilypuree.decorative_blocks.platform.Services;
-import lilypuree.decorative_blocks.registration.DBBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -48,10 +45,7 @@ public class BonfireBlock extends Block {
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         if (!entityIn.fireImmune() && entityIn instanceof LivingEntity) {
             entityIn.hurt(entityIn.damageSources().inFire(), 1.0F);
-            if (Services.PLATFORM.isModLoaded("soul_fire_d")) {
-                SoulFired.setSecondsOnFire(entityIn, 3, state.is(DBBlocks.SOUL_BONFIRE.get()));
-            } else
-                entityIn.igniteForSeconds(3);
+            entityIn.igniteForSeconds(3);
         }
         super.entityInside(state, worldIn, pos, entityIn);
     }
