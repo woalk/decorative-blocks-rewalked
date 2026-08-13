@@ -8,8 +8,8 @@
     "${mod_author}"
   ],
   "contact": {
-    "sources": "https://github.com/bigenergy/Decorative-Blocks-Reborn",
-    "issues": "https://github.com/bigenergy/Decorative-Blocks-Reborn/issues"
+    "sources": "https://github.com/woalk/decorative-blocks-rewalked",
+    "issues": "https://github.com/woalk/decorative-blocks-rewalked/issues"
   },
   "license": "${mod_license}",
   "icon" : "logo.png",

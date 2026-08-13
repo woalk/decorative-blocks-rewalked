@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT'
+    id "com.modrinth.minotaur" version "2.+"
 }
 base {
     archivesName = "decorative_blocks_rewalked-fabric-${minecraft_version}"
@@ -37,6 +38,19 @@ loom {
             ideConfigGenerated(true)
             runDir("run")
         }
+    }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "decorative-blocks-rewalked" // This can be the project ID or the slug. Either will work!
+    versionNumber = "fabric-${version}"
+    versionType = "beta"
+    uploadFile = jar
+    gameVersions = ["26.2"] // Must be an array, even with only one version
+    loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
+    dependencies {
+        required.project "fabric-api"
     }
 }
 
