@@ -4,6 +4,7 @@
 - Update build targets to Minecraft 26.2
 - Update Fabric Loader to 0.193, Loom to 1.17-SNAPSHOT, and Fabric API to 0.257.0+26.2
 - Update NeoForge to 26.2.0.59
+- Added Pale Oak variants of wooden blocks.
 
 ## Minecraft 1.21.1 Changelog
 
