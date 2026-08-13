@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -18,20 +20,19 @@ public class ForgeThatchFluidBlock extends LiquidBlock implements ThatchBlock {
         super(fluid, properties);
     }
 
-    @SuppressWarnings("deprecation")
+
     @Override
-    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof Player) {
-            Player player = (Player) entityIn;
+    protected void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
+        if (entityIn instanceof Player player) {
             boolean isPlayerMoving = player.getDeltaMovement().length() > 0.1;
-            if (worldIn.random.nextFloat() < 0.1F && isPlayerMoving) {
+            if (worldIn.getRandom().nextFloat() < 0.1F && isPlayerMoving) {
                 worldIn.playSound(player, pos, SoundEvents.GRASS_HIT, SoundSource.BLOCKS, 0.8f, 1.5f);
             }
         }
     }
 
     @Override
-    public ItemStack pickupBlock(@Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+    public ItemStack pickupBlock(@org.jspecify.annotations.Nullable LivingEntity user, LevelAccessor level, BlockPos pos, BlockState state) {
         return ItemStack.EMPTY;
     }
 }

@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.*;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class BlockStateGenerationHelper {
         WoodType woodType = block.getWoodType();
         String texture = woodType.name() + "_support";
 
-        MultiPartBlockStateBuilder builder = getMultipartBuilder((Block) block);
+        var builder = getMultipartBuilder((Block) block);
         BlockStateProperties.UP.getAllValues().forEach(up -> {
             String upsideDown = up.value() ? "" : "upside_down_";
             ModBlockProperties.HORIZONTAL_SHAPE.getAllValues().forEach(shape -> {

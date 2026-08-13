@@ -4,13 +4,11 @@ import lilypuree.decorative_blocks.Constants;
 import lilypuree.decorative_blocks.registration.DBTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.concurrent.CompletableFuture;
 
-public class DBItemTagsProvider extends ItemTagsProvider {
+public class DBItemTagsProvider extends net.neoforged.neoforge.common.data.ItemTagsProvider {
 
     public DBItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> pBlockTags, ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, pBlockTags, Constants.MOD_ID, existingFileHelper);
