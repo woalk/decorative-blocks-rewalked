@@ -37,7 +37,6 @@ public class DBItemModels extends ItemModelProvider {
         helper.simpleItem(DBItems.CHAIN.get());
         helper.simpleItem(DBItems.BRAZIER.get());
         helper.simpleItem(DBItems.SOUL_BRAZIER.get());
-//        simpleItem(DBItems.BLOCKSTATE_COPY_ITEM);
         /*
         bar panels, chandeliers, lattices, stone pillars have a custom item model
          */
