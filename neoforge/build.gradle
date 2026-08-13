@@ -3,7 +3,7 @@ plugins {
     id 'net.neoforged.gradle.userdev' version '7.1.38'
 }
 base {
-    archivesName = "DecorativeBlocks-Reborn-neoforge-${minecraft_version}"
+    archivesName = "decorative_blocks_rewalked-neoforge-${minecraft_version}"
 }
 
 if (file('src/main/resources/META-INF/accesstransformer.cfg').exists()) {

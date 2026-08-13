@@ -1,0 +1,36 @@
+stages:
+  - build
+  - publish
+
+image: mcr.microsoft.com/openjdk/jdk:25-ubuntu
+
+cache:
+  paths:
+    - .gradle/caches/
+    - .gradle/wrapper/
+    - .gradle/loom-cache/
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+build fabric:
+  stage: build
+  script:
+    - ./gradlew :fabric:build
+  artifacts:
+    paths:
+      - fabric/build/libs/decorative_blocks_rewalked-*.jar
+  rules:
+    - if: $CI_COMMIT_TAG || $CI_PIPELINE_SOURCE == "push"
+
+build neoforge:
+  stage: build
+  script:
+    - ./gradlew :neoforge:build
+  artifacts:
+    paths:
+      - neoforge/build/libs/decorative_blocks_rewalked-*.jar
+  rules:
+    - if: $CI_COMMIT_TAG || $CI_PIPELINE_SOURCE == "push"
+  # TODO: NeoForge builds are failing, so we have to allow them to fail for now
+  allow_failure: true

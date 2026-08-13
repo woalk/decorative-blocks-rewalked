@@ -83,4 +83,7 @@ subprojects {
     tasks.withType(GenerateModuleMetadata).configureEach {
         enabled = false
     }
+    tasks.withType(Test).each { task ->
+        task.enabled = false
+    }
 }

@@ -4,7 +4,7 @@ plugins {
     id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT'
 }
 base {
-    archivesName = "DecorativeBlocks-Reborn-fabric-${minecraft_version}"
+    archivesName = "decorative_blocks_rewalked-fabric-${minecraft_version}"
 }
 repositories {
     mavenCentral()
