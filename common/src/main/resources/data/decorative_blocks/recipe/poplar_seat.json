@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "decorative_seats",
+  "key": {
+    "x": "minecraft:poplar_slab",
+    "y": "minecraft:poplar_fence"
+  },
+  "pattern": [
+    "x  ",
+    "y  "
+  ],
+  "result": {
+    "count": 6,
+    "id": "decorative_blocks:poplar_seat"
+  },
+  "show_notification": true
+}

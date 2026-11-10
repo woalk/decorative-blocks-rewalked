@@ -17,6 +17,7 @@ public class VanillaWoodTypes {
     public static Set<WoodType> VANILLA = Set.of(
             WoodType.OAK,
             WoodType.SPRUCE,
+            WoodType.POPLAR,
             WoodType.BIRCH,
             WoodType.ACACIA,
             WoodType.CHERRY,

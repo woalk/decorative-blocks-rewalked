@@ -5,6 +5,7 @@
     "decorative_blocks:jungle_beam",
     "decorative_blocks:dark_oak_beam",
     "decorative_blocks:oak_beam",
-    "decorative_blocks:spruce_beam"
+    "decorative_blocks:spruce_beam",
+    "decorative_blocks:poplar_beam"
   ]
 }

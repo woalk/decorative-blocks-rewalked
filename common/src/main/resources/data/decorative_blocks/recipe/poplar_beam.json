@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "decorative_beams",
+  "key": {
+    "x": "minecraft:stripped_poplar_log"
+  },
+  "pattern": [
+    " x ",
+    " x "
+  ],
+  "result": {
+    "count": 2,
+    "id": "decorative_blocks:poplar_beam"
+  },
+  "show_notification": true
+}

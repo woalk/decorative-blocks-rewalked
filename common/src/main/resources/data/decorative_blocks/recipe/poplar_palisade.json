@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "decorative_palisades",
+  "key": {
+    "x": "minecraft:poplar_log"
+  },
+  "pattern": [
+    "xx "
+  ],
+  "result": {
+    "count": 6,
+    "id": "decorative_blocks:poplar_palisade"
+  },
+  "show_notification": true
+}

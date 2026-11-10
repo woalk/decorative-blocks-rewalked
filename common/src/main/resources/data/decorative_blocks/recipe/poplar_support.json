@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "decorative_supports",
+  "key": {
+    "x": "minecraft:poplar_planks"
+  },
+  "pattern": [
+    "xx ",
+    "x  "
+  ],
+  "result": {
+    "count": 6,
+    "id": "decorative_blocks:poplar_support"
+  },
+  "show_notification": true
+}
