@@ -27,14 +27,6 @@ import org.jspecify.annotations.NonNull;
 import java.util.Map;
 
 public class PalisadeBlock extends CrossCollisionBlock implements IWoodenBlock {
-    public static final MapCodec<PalisadeBlock> CODEC = RecordCodecBuilder.mapCodec(
-            inst -> inst.group(WoodType.CODEC.fieldOf("wood_type").forGetter(block -> block.woodType), propertiesCodec()).apply(inst, PalisadeBlock::new)
-    );
-    @Override
-    protected MapCodec<? extends CrossCollisionBlock> codec() {
-        return CODEC;
-    }
-
     private WoodType woodType;
 
     private final Map<BlockState, VoxelShape> shapeByIndex;

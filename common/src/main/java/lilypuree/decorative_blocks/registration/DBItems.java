@@ -13,9 +13,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static lilypuree.decorative_blocks.blocks.types.WoodDecorativeBlockTypes.*;
 
@@ -37,12 +37,12 @@ public class DBItems {
 
 
     static {
-        CHANDELIER = registerBlockItem("chandelier", DBBlocks.CHANDELIER);
-        SOUL_CHANDELIER = registerBlockItem("soul_chandelier", DBBlocks.SOUL_CHANDELIER);
+        CHANDELIER = registerBlockItem("chandelier", DBBlocks.CHANDELIER, new Item.Properties().cookingFuel(ContextIntProviders.COOKING_TIME_COAL));
+        SOUL_CHANDELIER = registerBlockItem("soul_chandelier", DBBlocks.SOUL_CHANDELIER, new Item.Properties().cookingFuel(ContextIntProviders.COOKING_TIME_COAL));
         BRAZIER = registerBlockItem("brazier", DBBlocks.BRAZIER);
         SOUL_BRAZIER = registerBlockItem("soul_brazier", DBBlocks.SOUL_BRAZIER);
         BAR_PANEL = registerBlockItem("bar_panel", DBBlocks.BAR_PANEL);
-        LATTICE = registerBlockItem("lattice", DBBlocks.LATTICE);
+        LATTICE = registerBlockItem("lattice", DBBlocks.LATTICE, new Item.Properties().cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL));
         CHAIN = registerBlockItem("chain", DBBlocks.CHAIN);
         STONE_PILLAR = registerBlockItem("stone_pillar", DBBlocks.STONE_PILLAR);
         ROCKY_DIRT = registerBlockItem("rocky_dirt", DBBlocks.ROCKY_DIRT);
@@ -53,10 +53,10 @@ public class DBItems {
         ImmutableMap.Builder<WoodType, ItemWrapper<SeatItem>> seats = new ImmutableMap.Builder<>();
         for (WoodType woodType : VanillaWoodTypes.VANILLA) {
             if (woodType != WoodType.BAMBOO)
-                beams.put(woodType, registerBlockItem(DBNames.name(woodType, BEAM), DBBlocks.BEAMS.get(woodType)));
-            seats.put(woodType, registerItem(DBNames.name(woodType, SEAT), new Item.Properties(), (properties) -> new SeatItem(DBBlocks.SEATS.get(woodType).get(), properties)));
-            supports.put(woodType, registerItem(DBNames.name(woodType, SUPPORT), new Item.Properties(), (properties) -> new SupportItem(DBBlocks.SUPPORTS.get(woodType).get(), properties)));
-            palisades.put(woodType, registerBlockItem(DBNames.name(woodType, PALISADE), DBBlocks.PALISADES.get(woodType)));
+                beams.put(woodType, registerBlockItem(DBNames.name(woodType, BEAM), DBBlocks.BEAMS.get(woodType), woodFuelProperties(woodType)));
+            seats.put(woodType, registerItem(DBNames.name(woodType, SEAT), woodFuelProperties(woodType), (properties) -> new SeatItem(DBBlocks.SEATS.get(woodType).get(), properties)));
+            supports.put(woodType, registerItem(DBNames.name(woodType, SUPPORT), woodFuelProperties(woodType), (properties) -> new SupportItem(DBBlocks.SUPPORTS.get(woodType).get(), properties)));
+            palisades.put(woodType, registerBlockItem(DBNames.name(woodType, PALISADE), DBBlocks.PALISADES.get(woodType), woodFuelProperties(woodType)));
         }
         BEAM_ITEMBLOCKS = beams.build();
         PALISADE_ITEMBLOCKS = palisades.build();
@@ -75,7 +75,18 @@ public class DBItems {
     }
 
     private static ItemWrapper<BlockItem> registerBlockItem(String name, BlockWrapper<?> block) {
-        return registerItem(name, new Item.Properties(), (properties) -> new BlockItem(block.get(), properties));
+        return registerBlockItem(name, block, new Item.Properties());
+    }
+
+    private static ItemWrapper<BlockItem> registerBlockItem(String name, BlockWrapper<?> block, Item.Properties properties) {
+        return registerItem(name, properties, (itemProperties) -> new BlockItem(block.get(), itemProperties));
+    }
+
+    private static Item.Properties woodFuelProperties(WoodType woodType) {
+        Item.Properties properties = new Item.Properties();
+        if (!VanillaWoodTypes.isNetherWood(woodType))
+            properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_SMALL);
+        return properties;
     }
 
 }

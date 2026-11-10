@@ -47,7 +47,7 @@ modrinth {
     versionNumber = "fabric-${version}"
     versionType = "beta"
     uploadFile = jar
-    gameVersions = ["26.2"] // Must be an array, even with only one version
+    gameVersions = ["26.3"] // Must be an array, even with only one version
     loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
     dependencies {
         required.project "fabric-api"

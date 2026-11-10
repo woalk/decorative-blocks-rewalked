@@ -40,10 +40,6 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 
 public class SeatBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, IWoodenBlock {
-    public static final MapCodec<SeatBlock> CODEC = RecordCodecBuilder.mapCodec(
-            inst -> inst.group(WoodType.CODEC.fieldOf("wood_type").forGetter(block -> block.woodType), propertiesCodec()).apply(inst, SeatBlock::new)
-    );
-
     protected static final VoxelShape POST_SHAPE = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 4.0D, 10.0D);
     protected static final VoxelShape TOP_POST = Block.box(6.0D, 7.0D, 6.0D, 10.0D, 16.0D, 10.0D);
     protected static final VoxelShape JOIST_NS = Block.box(0, 4.0D, 4D, 16D, 7D, 12D);
@@ -201,10 +197,5 @@ public class SeatBlock extends HorizontalDirectionalBlock implements SimpleWater
     @Override
     public boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 }
