@@ -2,7 +2,6 @@ package lilypuree.decorative_blocks.items;
 
 import lilypuree.decorative_blocks.Constants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
@@ -11,9 +10,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class SupportItem extends SwitchableBlockItem {

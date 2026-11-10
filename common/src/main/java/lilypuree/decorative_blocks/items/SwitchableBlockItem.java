@@ -1,18 +1,25 @@
 package lilypuree.decorative_blocks.items;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.BlockItemStateProperties;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jspecify.annotations.NonNull;
+
+import java.util.function.Consumer;
 
 public class SwitchableBlockItem extends BlockItem {
     private final BooleanProperty switching;
@@ -68,5 +75,15 @@ public class SwitchableBlockItem extends BlockItem {
     {
         Item item = stack.getItem();
         return item instanceof SwitchableBlockItem && ((SwitchableBlockItem) item).getValue(stack);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
+        if (!Minecraft.getInstance().hasShiftDown()) {
+            builder.accept(Component.translatable("item.decorative_blocks.hold_shift")
+                    .withStyle(ChatFormatting.DARK_GRAY));
+        }
+        super.appendHoverText(itemStack, context, display, builder, tooltipFlag);
     }
 }

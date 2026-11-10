@@ -127,6 +127,7 @@
   "fluid_type.decorative_blocks.thatch": "Thatch",
   "block.decorative_blocks.thatch": "Thatch",
   "item.decorative_blocks.thatch": "Thatch",
+  "item.decorative_blocks.hold_shift": "<Hold shift for details>",
   "wiki.decorative_blocks.thatch": "Cut open a hay bale with shears.",
   "wiki.decorative_blocks.support.condition1": "§7Sneak right-click in air:",
   "wiki.decorative_blocks.support.behavior1": "§3Flip block item upside down",
