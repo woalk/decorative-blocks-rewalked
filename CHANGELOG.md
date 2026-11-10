@@ -1,3 +1,11 @@
+## Minecraft 26.3 Changelog
+
+### 7.1.0
+
+- Update to Minecraft 26.3
+- Fix visual change when shift-clicking supports and seats.
+- Add Poplar variants of wooden blocks.
+
 ## Minecraft 26.2 Changelog
 
 ### 7.0.0
